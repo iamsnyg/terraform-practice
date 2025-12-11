@@ -37,4 +37,4 @@ override.tf.json
 terraform.rc
 
 # Ignore terra-keygen files
-terra-keygen-ec2-keyValuePair
+terra-keygen-ec2-keyValuePair*
