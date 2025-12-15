@@ -1,7 +1,22 @@
+# data "aws_ami" "ubuntu" {
+#     most_recent = true
+#     owners      = ["099720109477"] # Canonical
+
+#     filter {
+#         name   = "name"
+#         values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+#     }
+ 
+#     filter {
+#         name   = "virtualization-type"
+#         values = ["hvm"]
+#     }
+# }
+
 # key-value pair (login to ec2 instance)
 resource "aws_key_pair" "my_key_pair" {
-    key_name = "terra-keygen-ec2-keyValuePair"
-    public_key = file("terra-keygen-ec2-keyValuePair.pub")
+    key_name = "terra-key-ec2"
+    public_key = file("terra-key-ec2.pub")
 }
 
 #VPC & security group
@@ -51,10 +66,12 @@ resource "aws_security_group" "my_security_group" {
 }
 # Create ec2 instance
 resource "aws_instance" "my_ec2_instance" {
+    # ami = data.aws_ami.ubuntu.id
+    ami = "ami-02b8269d5e85954ef" #ubuntu 20.04 in us-east-1
+    instance_type = "t2.micro"
     key_name = aws_key_pair.my_key_pair.key_name
     security_groups = [aws_security_group.my_security_group.name]
-    ami = "ami-02b8269d5e85954ef" #Ubuntu 20.04
-    instance_type = "t2.micro"
+    # vpc_security_group_ids = [aws_security_group.my_security_group.id]
 
     root_block_device {
         volume_size = 8
@@ -65,3 +82,9 @@ resource "aws_instance" "my_ec2_instance" {
         Name = "automate-ec2-instance"
     }
 }
+
+# Output the public IP and DNS of the instance
+# output "ec2_public_ip" {
+#     description = "The public IP address of the EC2 instance"
+#     value = aws_instance.my_ec2_instance.public_ip
+# }
