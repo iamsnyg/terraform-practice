@@ -67,14 +67,14 @@ resource "aws_security_group" "my_security_group" {
 # Create ec2 instance
 resource "aws_instance" "my_ec2_instance" {
     # ami = data.aws_ami.ubuntu.id
-    ami = "ami-02b8269d5e85954ef" #ubuntu 20.04 in us-east-1
-    instance_type = "t2.micro"
+    ami = var.ec2_ami_id
+    instance_type = var.ec2_instance_type
     key_name = aws_key_pair.my_key_pair.key_name
     security_groups = [aws_security_group.my_security_group.name]
     # vpc_security_group_ids = [aws_security_group.my_security_group.id]
 
     root_block_device {
-        volume_size = 8
+        volume_size = var.ec2_root_volume_size
         volume_type = "gp3"
         delete_on_termination = true #delete volume when instance is terminated
     }
@@ -82,9 +82,3 @@ resource "aws_instance" "my_ec2_instance" {
         Name = "automate-ec2-instance"
     }
 }
-
-# Output the public IP and DNS of the instance
-# output "ec2_public_ip" {
-#     description = "The public IP address of the EC2 instance"
-#     value = aws_instance.my_ec2_instance.public_ip
-# }
