@@ -15,8 +15,9 @@
 
 # key-value pair (login to ec2 instance)
 resource "aws_key_pair" "my_key_pair" {
-  key_name   = "terra-key-ec2"
-  public_key = file("terra-key-ec2.pub")
+    key_name   = "terra-key-ec2"
+    public_key = file("terra-key-ec2.pub")
+    
 }
 
 #VPC & security group
@@ -71,8 +72,10 @@ resource "aws_instance" "my_ec2_instance" {
     for_each = tomap({
         instance-t2micro = "t2.micro"
         instance-t3micro = "t3.micro"
-        instance-t3small = "t3.small"
+        # instance-t3small = "t3.small"
     })
+
+    depends_on = [ aws_key_pair.my_key_pair, aws_security_group.my_security_group ] //ensures key pair and security group are created before instance is created
     # ami = data.aws_ami.ubuntu.id
     ami             = var.ec2_ami_id
     # instance_type   = var.ec2_instance_type
@@ -83,7 +86,7 @@ resource "aws_instance" "my_ec2_instance" {
     # vpc_security_group_ids = [aws_security_group.my_security_group.id]
 
     root_block_device {
-        volume_size           = var.ec2_root_volume_size
+        volume_size           = var.env == "prd" ? 9 : var.ec2_default_root_volume_size
         volume_type           = "gp3"
         delete_on_termination = true #delete volume when instance is terminated
     }
@@ -91,3 +94,9 @@ resource "aws_instance" "my_ec2_instance" {
         Name = "terraform-ec2-${each.key}"
     }
 }
+
+# resource "aws_instance" "my_new_instance" {
+#     ami           = "unknown"
+#     instance_type = "unknown"
+    
+# }
