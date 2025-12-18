@@ -66,10 +66,17 @@ resource "aws_security_group" "my_security_group" {
 }
 # Create ec2 instance
 resource "aws_instance" "my_ec2_instance" {
+    # count = 2
 
+    for_each = tomap({
+        instance-t2micro = "t2.micro"
+        instance-t3micro = "t3.micro"
+        instance-t3small = "t3.small"
+    })
     # ami = data.aws_ami.ubuntu.id
     ami             = var.ec2_ami_id
-    instance_type   = var.ec2_instance_type
+    # instance_type   = var.ec2_instance_type
+    instance_type   = each.value
     key_name        = aws_key_pair.my_key_pair.key_name
     security_groups = [aws_security_group.my_security_group.name]
     user_data       = file("install-ngnix.sh")
@@ -81,6 +88,6 @@ resource "aws_instance" "my_ec2_instance" {
         delete_on_termination = true #delete volume when instance is terminated
     }
     tags = {
-        Name = "automate-ec2-instance"
+        Name = "terraform-ec2-${each.key}"
     }
 }
