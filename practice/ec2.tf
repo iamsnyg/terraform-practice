@@ -73,6 +73,8 @@ resource "aws_instance" "my_ec2_instance" {
         instance-t2micro = "t2.micro"
         instance-t3micro = "t3.micro"
         # instance-t3small = "t3.small"
+        # instance-t3medium = "t3.medium"
+        
     })
 
     depends_on = [ aws_key_pair.my_key_pair, aws_security_group.my_security_group ] //ensures key pair and security group are created before instance is created

@@ -11,6 +11,8 @@ sudo systemctl enable nginx
 # Check Nginx status
 sudo systemctl status nginx
 
+echo "Nginx installation and setup complete."
+
 # Create a simple HTML file to verify Nginx is working
 echo "<html><head><title>Nginx Test</title></head><body><h1>Nginx is successfully installed and running!</h1></body></html>" | sudo tee /var/www/html/index.html
 
