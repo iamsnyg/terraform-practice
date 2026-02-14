@@ -6,11 +6,18 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket = "remote-infra-bucket-6497"
-    key    = "terraform.tfstate"
-    region = "ap-south-1"
-    dynamodb_table = "GameScores"
-    # encrypt = true
-  }
+  # backend "s3" {
+  #   bucket = "remote-infra-bucket-6497"
+  #   key    = "terraform.tfstate"
+  #   region = "ap-south-1"
+  #   dynamodb_table = "GameScores"
+  #   # encrypt = true
+  # }
+
+
+  # backend "local" {
+  #   path = "relative/path/to/terraform.tfstate"
+  # }
+
+
 }
